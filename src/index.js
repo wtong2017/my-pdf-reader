@@ -1,6 +1,7 @@
-import * as pdfjsLib from 'pdfjs-dist';
+const pdfjsLib = require('pdfjs-dist/webpack.js');
 import * as pdfjsViewer from 'pdfjs-dist/web/pdf_viewer';
-pdfjsLib.GlobalWorkerOptions.workerSrc = "https://cdn.jsdelivr.net/npm/pdfjs-dist@2.5.207/build/pdf.worker.js"
+
+import "pdfjs-dist/web/pdf_viewer.css"
 
 var myState = {
     pdf: null,
@@ -12,38 +13,57 @@ let lastPosition = null
 
 var SEARCH_FOR = ""
 
-var CMAP_URL = "https://cdn.jsdelivr.net/npm/pdfjs-dist@2.5.207/cmaps/";
-var CMAP_PACKED = true;
+// var CMAP_URL = "https://cdn.jsdelivr.net/npm/pdfjs-dist@2.5.207/cmaps/";
+// var CMAP_PACKED = true;
 
 var inputElement = document.getElementById("inputElement")
-inputElement.onchange = function (event) {
+if (inputElement) {
+    // load with input file
+    inputElement.onchange = function (event) {
 
-    var file = event.target.files[0];
+        var file = event.target.files[0];
 
-    //Step 2: Read the file using file reader
-    var fileReader = new FileReader();
+        //Step 2: Read the file using file reader
+        var fileReader = new FileReader();
 
-    fileReader.onload = function () {
+        fileReader.onload = function () {
 
-        //Step 4:turn array buffer into typed array
-        var typedarray = new Uint8Array(this.result);
+            //Step 4:turn array buffer into typed array
+            var typedarray = new Uint8Array(this.result);
 
-        //Step 5:PDFJS should be able to read this
-        var loadingTask = pdfjsLib.getDocument({
-            data: typedarray,
-            cMapUrl: CMAP_URL,
-            cMapPacked: CMAP_PACKED
-        });
-        loadingTask.promise.then(function (pdf) {
-            // you can now use *pdf* here
-            myState.pdf = pdf;
-            pdfViewer.setDocument(myState.pdf);
-            pdfLinkService.setDocument(myState.pdf, null);
-            render();
-        });
-    };
-    //Step 3:Read the file as ArrayBuffer
-    fileReader.readAsArrayBuffer(file);
+            //Step 5:PDFJS should be able to read this
+            var loadingTask = pdfjsLib.getDocument({
+                data: typedarray,
+                // cMapUrl: CMAP_URL,
+                // cMapPacked: CMAP_PACKED
+            });
+            loadingTask.promise.then(function (pdf) {
+                // you can now use *pdf* here
+                myState.pdf = pdf;
+                pdfViewer.setDocument(myState.pdf);
+                pdfLinkService.setDocument(myState.pdf, null);
+                render();
+            });
+        };
+        //Step 3:Read the file as ArrayBuffer
+        fileReader.readAsArrayBuffer(file);
+    }
+} else {
+    // load with link query
+    let queryString = document.location.search.substring(1)
+    const urlParams = new URLSearchParams(queryString);
+    var loadingTask = pdfjsLib.getDocument({
+        url: urlParams.get("file"),
+        // cMapUrl: CMAP_URL,
+        // cMapPacked: CMAP_PACKED
+    });
+    loadingTask.promise.then(function (pdf) {
+        // you can now use *pdf* here
+        myState.pdf = pdf;
+        pdfViewer.setDocument(myState.pdf);
+        pdfLinkService.setDocument(myState.pdf, null);
+        render();
+    });
 }
 
 var container = document.getElementById("viewerContainer");

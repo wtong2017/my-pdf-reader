@@ -18,10 +18,14 @@
   },
   "homepage": "https://github.com/wtong2017/my-pdf-reader#readme",
   "devDependencies": {
+    "css-loader": "^5.0.1",
+    "file-loader": "^6.2.0",
     "html-webpack-plugin": "^4.5.0",
+    "style-loader": "^2.0.0",
     "webpack": "^5.8.0",
     "webpack-cli": "^4.2.0",
-    "webpack-dev-server": "^3.11.0"
+    "webpack-dev-server": "^3.11.0",
+    "worker-loader": "^3.0.5"
   },
   "dependencies": {
     "pdfjs-dist": "^2.5.207"
