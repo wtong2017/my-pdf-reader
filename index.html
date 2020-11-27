@@ -7,33 +7,25 @@
     <title>My PDF Viewer</title>
 
     <style>
-        /* #canvas_container {
-            width: 800px;
-            height: 450px;
-            overflow: auto;
-            background: #333;
-            text-align: center;
-            border: solid 3px;
-        } */
-
-        /* #text-layer {
-            position: absolute;
-            left: 0;
-            top: 0;
-            right: 0;
-            bottom: 0;
-            overflow: hidden;
-            opacity: 0.2;
-            line-height: 1.0;
+        #topMenu {
+            height: 3%;
+            background-color: #F7F7F7;
         }
 
-        #text-layer>div {
-            color: transparent;
+        body {
+            background-color: #808080;
+            margin: 0;
+            padding: 0;
+            height: 100vh;
+            width: 100vw;
+        }
+
+        #viewerContainer {
+            overflow: auto;
             position: absolute;
-            white-space: pre;
-            cursor: text;
-            transform-origin: 0% 0%;
-        } */
+            width: 100%;
+            height: 97%;
+        }
     </style>
     <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/pdfjs-dist@2.5.207/web/pdf_viewer.css">
     <script src="https://cdn.jsdelivr.net/npm/pdfjs-dist@2.5.207/build/pdf.min.js"></script>
@@ -41,24 +33,15 @@
 </head>
 
 <body>
+    <div id="topMenu">
+        <div style="padding: 5px;">
+            <label for="inputElement">Select a PDF file:</label>
+            <input type="file" id="inputElement" name="inputElement">
+            <button id="back" onclick="goBack()">Go back</button>
+        </div>
+    </div>
     <div id="viewerContainer">
         <div id="viewer" class="pdfViewer"></div>
-    </div>
-    <label for="inputElement">Select a PDF file:</label>
-    <input type="file" id="inputElement" name="inputElement">
-    <!-- <div id="my_pdf_viewer">
-        <div id="canvas_container">
-            <canvas id="pdf_renderer"></canvas>
-        </div>
-    </div> -->
-    <div id="navigation_controls">
-        <button id="go_previous">Previous</button>
-        <input id="current_page" value="1" type="number" />
-        <button id="go_next">Next</button>
-    </div>
-    <div id="zoom_controls">
-        <button id="zoom_in">+</button>
-        <button id="zoom_out">-</button>
     </div>
 </body>
 <script>
@@ -67,6 +50,13 @@
         currentPage: 1,
         zoom: 1
     }
+
+    let lastPosition = null
+
+    var SEARCH_FOR = ""
+
+    var CMAP_URL = "https://cdn.jsdelivr.net/npm/pdfjs-dist@2.5.207/cmaps/";
+    var CMAP_PACKED = true;
 
     var inputElement = document.getElementById("inputElement")
     inputElement.onchange = function (event) {
@@ -82,10 +72,16 @@
             var typedarray = new Uint8Array(this.result);
 
             //Step 5:PDFJS should be able to read this
-            var loadingTask = pdfjsLib.getDocument(typedarray);
+            var loadingTask = pdfjsLib.getDocument({
+                data: typedarray,
+                cMapUrl: CMAP_URL,
+                cMapPacked: CMAP_PACKED
+            });
             loadingTask.promise.then(function (pdf) {
                 // you can now use *pdf* here
                 myState.pdf = pdf;
+                pdfViewer.setDocument(myState.pdf);
+                pdfLinkService.setDocument(myState.pdf, null);
                 render();
             });
         };
@@ -93,120 +89,50 @@
         fileReader.readAsArrayBuffer(file);
     }
 
-    document.getElementById('go_previous')
-        .addEventListener('click', (e) => {
-            if (myState.pdf == null
-                || myState.currentPage == 1) return;
-            myState.currentPage -= 1;
-            document.getElementById("current_page")
-                .value = myState.currentPage;
-            render();
-        });
-
-    document.getElementById('go_next')
-        .addEventListener('click', (e) => {
-            if (myState.pdf == null
-                || myState.currentPage > myState.pdf
-                    ._pdfInfo.numPages)
-                return;
-
-            myState.currentPage += 1;
-            document.getElementById("current_page")
-                .value = myState.currentPage;
-            render();
-        });
-
-    document.getElementById('current_page')
-        .addEventListener('keypress', (e) => {
-            if (myState.pdf == null) return;
-
-            // Get key code
-            var code = (e.keyCode ? e.keyCode : e.which);
-
-            // If key code matches that of the Enter key
-            if (code == 13) {
-                var desiredPage =
-                    document.getElementById('current_page')
-                        .valueAsNumber;
-
-                if (desiredPage >= 1
-                    && desiredPage <= myState.pdf
-                        ._pdfInfo.numPages) {
-                    myState.currentPage = desiredPage;
-                    document.getElementById("current_page")
-                        .value = desiredPage;
-                    render();
-                }
-            }
-        });
-
-    document.getElementById('zoom_in')
-        .addEventListener('click', (e) => {
-            if (myState.pdf == null) return;
-            myState.zoom += 0.5;
-            render();
-        });
-
-    document.getElementById('zoom_out')
-        .addEventListener('click', (e) => {
-            if (myState.pdf == null) return;
-            myState.zoom -= 0.5;
-            render();
-        });
-
-
     var container = document.getElementById("viewerContainer");
     var eventBus = new pdfjsViewer.EventBus();
     var pdfLinkService = new pdfjsViewer.PDFLinkService({
         eventBus: eventBus,
+        externalLinkTarget: 2 // new tab
     });
-
-    var pdfSinglePageViewer = new pdfjsViewer.PDFSinglePageViewer({
-        container: container,
+    var pdfFindController = new pdfjsViewer.PDFFindController({
         eventBus: eventBus,
         linkService: pdfLinkService,
     });
-    pdfLinkService.setViewer(pdfSinglePageViewer);
+
+    var pdfViewer = new pdfjsViewer.PDFViewer({
+        container: container,
+        eventBus: eventBus,
+        linkService: pdfLinkService,
+        findController: pdfFindController,
+    });
+    pdfLinkService.setViewer(pdfViewer);
 
     eventBus.on("pagesinit", function () {
-        // We can use pdfSinglePageViewer now, e.g. let's change default scale.
-        pdfSinglePageViewer.currentScaleValue = "page-width";
+        // We can use pdfViewer now, e.g. let's change default scale.
+        pdfViewer.currentScaleValue = "page-width";
+
+        if (SEARCH_FOR) {
+            pdfFindController.executeCommand("find", { query: SEARCH_FOR });
+        }
     });
 
     function render() {
-        pdfSinglePageViewer.setDocument(myState.pdf);
-        pdfLinkService.setDocument(myState.pdf, null);
 
-        // myState.pdf.getPage(myState.currentPage).then((page) => {
-        //     // var canvas = document.getElementById("pdf_renderer");
-        //     // var ctx = canvas.getContext('2d');
-
-        //     // var viewport = page.getViewport({ scale: myState.zoom, });
-
-        //     // canvas.width = viewport.width;
-        //     // canvas.height = viewport.height;
-
-        //     // page.render({
-        //     //     canvasContext: ctx,
-        //     //     viewport: viewport
-        //     // });
-
-        //     // Creating the page view with default parameters.
-        //     var pdfPageView = new pdfjsViewer.PDFPageView({
-        //         container: container,
-        //         id: myState.currentPage,
-        //         scale: myState.zoom,
-        //         defaultViewport: page.getViewport({ scale: myState.zoom }),
-        //         eventBus: eventBus,
-        //         // We can enable text/annotations layers, if needed
-        //         textLayerFactory: new pdfjsViewer.DefaultTextLayerFactory(),
-        //         annotationLayerFactory: new pdfjsViewer.DefaultAnnotationLayerFactory(),
-        //     });
-        //     // Associates the actual page with the view, and drawing it
-        //     pdfPageView.setPdfPage(page);
-        //     return pdfPageView.draw();
-        // });
     }
+
+    function goBack() {
+        if (lastPosition) {
+            lastPosition.scrollIntoView()
+            lastPosition = null
+        }
+    }
+
+    document.addEventListener('click', function (event) {
+        if (event.target.tagName == 'A' && event.target.className == "internalLink") {
+            lastPosition = event.target
+        }
+    }, false);
 </script>
 
 </html>
