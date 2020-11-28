@@ -1,44 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <title>My PDF Viewer</title>
 
     <style>
-        #topMenu {
-            height: 3%;
-            background-color: #F7F7F7;
-        }
+      #topMenu {
+        height: 3%;
+        background-color: #f7f7f7;
+      }
 
-        body {
-            background-color: #808080;
-            margin: 0;
-            padding: 0;
-            height: 100vh;
-            width: 100vw;
-        }
+      body {
+        background-color: #808080;
+        margin: 0;
+        padding: 0;
+        height: 100vh;
+        width: 100vw;
+      }
 
-        #viewerContainer {
-            overflow: auto;
-            position: absolute;
-            width: 100%;
-            height: 97%;
-        }
+      #viewerContainer {
+        overflow: auto;
+        position: absolute;
+        width: 100%;
+        height: 97%;
+      }
     </style>
-</head>
+  </head>
 
-<body>
+  <body>
     <div id="topMenu">
-        <div style="padding: 5px;">
-            <label for="inputElement">Select a PDF file:</label>
-            <input type="file" id="inputElement" name="inputElement">
-            <button id="back">Go back</button>
-        </div>
+      <div style="padding: 5px">
+        <label for="inputElement">Select a PDF file:</label>
+        <input type="file" id="inputElement" name="inputElement" />
+        <button id="back">Go back</button>
+      </div>
     </div>
     <div id="viewerContainer">
-        <div id="viewer" class="pdfViewer"></div>
+      <div id="viewer" class="pdfViewer"></div>
     </div>
-</body>
+  </body>
 </html>

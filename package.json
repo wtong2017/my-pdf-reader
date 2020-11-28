@@ -5,7 +5,8 @@
   "main": "index.js",
   "scripts": {
     "build": "webpack",
-    "dev": "webpack serve"
+    "dev": "webpack serve",
+    "lint": "eslint src"
   },
   "repository": {
     "type": "git",
@@ -19,8 +20,18 @@
   "homepage": "https://github.com/wtong2017/my-pdf-reader#readme",
   "devDependencies": {
     "css-loader": "^5.0.1",
+    "eslint": "^7.14.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-promise": "^4.2.1",
     "file-loader": "^6.2.0",
     "html-webpack-plugin": "^4.5.0",
+    "husky": "^4.3.0",
+    "lint-staged": "^10.5.2",
+    "prettier": "^2.2.1",
     "style-loader": "^2.0.0",
     "webpack": "^5.8.0",
     "webpack-cli": "^4.2.0",
