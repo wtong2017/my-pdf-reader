@@ -1,6 +1,7 @@
 import * as pdfjsViewer from "pdfjs-dist/web/pdf_viewer";
 
 import "pdfjs-dist/web/pdf_viewer.css";
+import { MyLinkService } from "./myPDFLinkService";
 const pdfjsLib = require("pdfjs-dist/webpack.js");
 
 const myState = {
@@ -41,7 +42,6 @@ if (inputElement) {
         myState.pdf = pdf;
         pdfViewer.setDocument(myState.pdf);
         pdfLinkService.setDocument(myState.pdf, null);
-        render();
       });
     };
     // Step 3:Read the file as ArrayBuffer
@@ -61,14 +61,13 @@ if (inputElement) {
     myState.pdf = pdf;
     pdfViewer.setDocument(myState.pdf);
     pdfLinkService.setDocument(myState.pdf, null);
-    render();
   });
 }
 
 const container = document.getElementById("viewerContainer");
 const viewer = document.getElementById("viewer");
 const eventBus = new pdfjsViewer.EventBus();
-const pdfLinkService = new pdfjsViewer.PDFLinkService({
+const pdfLinkService = new MyLinkService({
   eventBus: eventBus,
   externalLinkTarget: 2, // new tab
 });
@@ -93,8 +92,6 @@ eventBus.on("pagesinit", function () {
     pdfFindController.executeCommand("find", { query: SEARCH_FOR });
   }
 });
-
-function render() {}
 
 function goBack() {
   if (lastPosition) {
@@ -125,3 +122,11 @@ viewer.addEventListener(
   },
   false
 );
+
+document
+  .querySelector("#sidebar>.closebtn")
+  .addEventListener("click", closeNav);
+
+function closeNav() {
+  document.getElementById("sidebar").style.width = "0px";
+}

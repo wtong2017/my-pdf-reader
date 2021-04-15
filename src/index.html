@@ -25,6 +25,28 @@
         width: 100%;
         height: 97%;
       }
+
+      .sidebar {
+        height: 100%;
+        width: 0;
+        right: 0;
+        top: 0;
+        background-color: #fff;
+        position: fixed !important;
+        z-index: 1;
+        overflow: auto;
+        transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+        padding-top: 60px; /* Place content 60px from the top */
+  transition: 0.5s; /* 0.5 second transition effect to slide in the sidenav */
+      }
+
+      .sidebar .closebtn {
+  position: absolute;
+  top: 0;
+  right: 25px;
+  font-size: 36px;
+  margin-left: 50px;
+}
     </style>
   </head>
 
@@ -38,6 +60,9 @@
     </div>
     <div id="viewerContainer">
       <div id="viewer" class="pdfViewer"></div>
+      <div id="sidebar" class="sidebar">
+        <button class="closebtn">&times;</button>
+      </div>
     </div>
   </body>
 </html>
