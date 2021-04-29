@@ -150,6 +150,7 @@ console.log("mounted");
 <div id="viewerContainer">
   <div id="viewer" class="pdfViewer" />
   <div id="sidebar" class="sidebar">
+    <div id="content"></div>
     <button class="closebtn" on:click={closeNav}>&times;</button>
   </div>
 </div>
