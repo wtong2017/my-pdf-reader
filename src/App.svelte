@@ -140,13 +140,6 @@ console.log("mounted");
   }
 </script>
 
-<div id="topMenu">
-  <div style="padding: 5px">
-    <label for="inputElement">Select a PDF file:</label>
-    <input type="file" id="inputElement" name="inputElement" />
-    <button id="back">Go back</button>
-  </div>
-</div>
 <div id="viewerContainer">
   <div id="viewer" class="pdfViewer" />
   <div id="sidebar" class="sidebar">
@@ -156,11 +149,6 @@ console.log("mounted");
 </div>
 
 <style>
-  #topMenu {
-    height: 3%;
-    background-color: #f7f7f7;
-  }
-
   #viewerContainer {
     overflow: auto;
     position: absolute;
