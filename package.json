@@ -1,0 +1,53 @@
+{
+  "name": "pdfreader",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "build": "webpack --mode production",
+    "dev": "webpack serve --mode development",
+    "lint": "eslint src"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/wtong2017/my-pdf-reader.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/wtong2017/my-pdf-reader/issues"
+  },
+  "homepage": "https://github.com/wtong2017/my-pdf-reader#readme",
+  "devDependencies": {
+    "@babel/core": "^7.13.15",
+    "@babel/plugin-transform-runtime": "^7.13.15",
+    "@babel/polyfill": "^7.12.1",
+    "@babel/preset-env": "^7.13.15",
+    "babel-loader": "^8.2.2",
+    "css-loader": "^5.2.1",
+    "dotenv-webpack": "^7.0.2",
+    "eslint": "^7.14.0",
+    "eslint-config-prettier": "^6.15.0",
+    "eslint-config-standard": "^16.0.2",
+    "eslint-plugin-import": "^2.22.1",
+    "eslint-plugin-node": "^11.1.0",
+    "eslint-plugin-prettier": "^3.1.4",
+    "eslint-plugin-promise": "^4.2.1",
+    "file-loader": "^6.2.0",
+    "html-webpack-plugin": "^4.5.2",
+    "husky": "^4.3.0",
+    "lint-staged": "^10.5.2",
+    "mini-css-extract-plugin": "^1.4.1",
+    "prettier": "^2.2.1",
+    "style-loader": "^2.0.0",
+    "svelte-loader": "^3.1.1",
+    "webpack": "^5.33.2",
+    "webpack-cli": "^4.6.0",
+    "webpack-dev-server": "^3.11.2",
+    "worker-loader": "^3.0.5"
+  },
+  "dependencies": {
+    "pdfjs-dist": "^2.5.207",
+    "svelte": "^3.37.0"
+  }
+}

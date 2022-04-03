@@ -1,0 +1,27 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Document</title>
+    <style>
+      #topMenu {
+        background-color: #f7f7f7;
+      }
+    </style>
+  </head>
+  <body>
+    <div style="display: flex; flex-direction: column; height: 100%; width: 100%;">
+      <div id="topMenu">
+        <div style="padding: 2px">
+          <label for="inputElement">Select a PDF file:</label>
+          <input type="file" id="inputElement" name="inputElement" />
+          <button id="back">Go back</button>
+        </div>
+      </div>
+      <!--This is the node that svelte is going to take to make the magic-->
+      <div id="root" style="flex-grow: 1;"></div>
+    </div>
+  </body>
+</html>
